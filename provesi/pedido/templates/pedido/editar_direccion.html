@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar dirección de pedido {{ pedido_id }}</title>
+</head>
+<body>
+<h1>Editar dirección del pedido {{ pedido_id }}</h1>
+
+<label for="direccion">Nueva dirección:</label>
+<input type="text" id="direccion" name="direccion">
+<button id="btn-guardar">Guardar</button>
+
+<p id="mensaje"></p>
+
+<script>
+    document.getElementById("btn-guardar").addEventListener("click", async function () {
+        const direccion = document.getElementById("direccion").value;
+
+        const resp = await fetch("{% url 'pedido-direccion' pedido_id %}", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ direccion })
+        });
+
+        const data = await resp.json();
+        document.getElementById("mensaje").textContent =
+            resp.status === 200 ? data.mensaje : (data.detail || "Error");
+    });
+</script>
+
+</body>
+</html>
